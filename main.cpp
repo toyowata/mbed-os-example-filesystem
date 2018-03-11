@@ -22,6 +22,7 @@
 #include "DataFlashBlockDevice.h"
 #include "SDBlockDevice.h"
 #include "HeapBlockDevice.h"
+#include "FlashIAPBlockDevice.h"
 
 // File systems
 #include "LittleFileSystem.h"
@@ -29,11 +30,19 @@
 
 
 // Physical block device, can be any device that supports the BlockDevice API
+#if 0
 SPIFBlockDevice bd(
         MBED_CONF_SPIF_DRIVER_SPI_MOSI,
         MBED_CONF_SPIF_DRIVER_SPI_MISO,
         MBED_CONF_SPIF_DRIVER_SPI_CLK,
         MBED_CONF_SPIF_DRIVER_SPI_CS);
+#else
+#if defined(TARGET_K64F)
+FlashIAPBlockDevice bd(0x80000, 0x80000);
+#else
+FlashIAPBlockDevice bd(0x08100000, 0x80000);
+#endif
+#endif
 
 // File system declaration
 LittleFileSystem fs("fs");
